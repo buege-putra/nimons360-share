@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open in Nimons360</title>
+  <style>
+    :root {
+      --primary: #1565C0;
+      --on-primary: #FFFFFF;
+      --background: #F6F5F8;
+      --surface: #FFFBFE;
+      --on-surface: #1C1B1F;
+      --on-surface-variant: #49454F;
+      --outline: #CAC4D0;
+      --error: #B3261E;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--background);
+      color: var(--on-surface);
+      padding: 24px;
+    }
+    .card {
+      max-width: 360px;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--outline);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(21, 101, 192, 0.12);
+    }
+    .logo {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      border-radius: 20px;
+      display: block;
+      object-fit: cover;
+      box-shadow: 0 2px 12px rgba(21, 101, 192, 0.25);
+    }
+    .brand {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin: 0 0 4px;
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 8px;
+      color: var(--on-surface);
+    }
+    p {
+      font-size: 14px;
+      color: var(--on-surface-variant);
+      margin: 0 0 24px;
+      line-height: 1.5;
+    }
+    a.button {
+      display: inline-block;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 28px;
+      background: var(--primary);
+      color: var(--on-primary);
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+    a.button:active { opacity: 0.85; }
+    .hint {
+      margin-top: 8px;
+      margin-bottom: 0;
+      font-size: 12px;
+      color: var(--on-surface-variant);
+      opacity: 0.75;
+    }
+    .error {
+      color: var(--error);
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="logo.png" alt="Nimons360 logo" />
+    <p class="brand">Nimons360</p>
+    <h1>Family Invite</h1>
+    <p id="message">You've been invited to join a family. Tap the button below to open it in the Nimons360 app.</p>
+    <a id="open-link" class="button" href="#">Open in Nimons360</a>
+    <p class="hint">If nothing happens, make sure the Nimons360 app is installed on your device.</p>
+  </div>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get("id");
+      var code = params.get("code");
+      var link = document.getElementById("open-link");
+      var message = document.getElementById("message");
+      var hint = document.querySelector(".hint");
+
+      if (!id) {
+        message.textContent = "This invite link is missing some information. Please ask the sender for a new link.";
+        message.classList.add("error");
+        link.style.display = "none";
+        hint.style.display = "none";
+        return;
+      }
+
+      var deepLink = "nimons360://family/" + encodeURIComponent(id) +
+        (code ? "?code=" + encodeURIComponent(code) : "");
+
+      link.setAttribute("href", deepLink);
+
+      // Best-effort auto-open
+      window.location.href = deepLink;
+    })();
+  </script>
+</body>
+</html>
